@@ -1,0 +1,9 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=154
+
+Plugin that allows you to add to or replace your tags file from the menu.
+
+The script takes the current working directory and finds C/C++ source to be added to your tags file.
+Unix only; requires ctags, find and egrep. The default tag file is $HOME/.tags
+
+
+
