@@ -22,8 +22,9 @@ let s:rootdir=getcwd()
 let &tags=s:tagfile
 
 amenu CTa&gs.\ &Add			    :call CTagsAdd()<CR>
-amenu CTa&gs.\ &Replacell 	    :call CTagsReplace()<CR>
+amenu CTa&gs.\ &Replace   	    :call CTagsReplace()<CR>
 amenu CTa&gs.\ &Set\ Root\ Dir 	:call CTagsSetRoot()<CR>
+amenu CTa&gs.\ &Get\ Root\ Dir 	:call CTagsGetRoot()<CR>
 
 " append tagged contents of this directory to the tag file
 function! CTagsAdd()
@@ -35,12 +36,28 @@ function! CTagsReplace()
 	exec '!ctags --c-types=+C+x+p -f '.s:tagfile.' $(find '.s:rootdir.' | egrep '.s:suffixes.')'
 endfunction
 
-" move the starting directory to pwd
+" move the starting directory 
 function! CTagsSetRoot()
-    let s:rootdir=getcwd()
-    echo s:rootdir
+	let s:rootdir=input("Enter root directory, <CR> for pwd: ")
+	if s:rootdir == ''
+		let s:rootdir=getcwd()
+	endif
+	while !isdirectory(s:rootdir)
+		let s:rootdir=input("Enter root directory, <CR> for pwd: ")
+		if s:rootdir == ''
+			let s:rootdir=getcwd()
+		endif
+	endwhile
+	call CTagsGetRoot()
 endfunction
 
-nmap ,ta :call CTagsAdd()<CR>
-nmap ,tr :call CTagsReplace()<CR>
-nmap ,ts :call CTagsSetRoot()<CR>
+function! CTagsGetRoot()
+	echo "\r"
+	echo s:rootdir
+endfunction
+
+" key maps for the menu impaired
+nmap <Leader>ta :call CTagsAdd()<CR>
+nmap <Leader>tr :call CTagsReplace()<CR>
+nmap <Leader>ts :call CTagsSetRoot()<CR>
+nmap <Leader>tg :call CTagsGetRoot()<CR>
